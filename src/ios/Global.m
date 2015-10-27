@@ -24,6 +24,7 @@
 const char* ProjectModeName[] = {"waitDownload", "waitRefresh", "inProgress"};
 
 #define AVATAR_PATH @"avatar"
+#define RESOURCE_PATH @"resource"
 #define TMP_PATH @"tmp"
 #define PROJECT_PATH @"project"
 #define PROJECT_INFO_PATH @"info"
@@ -542,10 +543,15 @@ static ProjectViewController* currentController;
     return [self audioController].isPlaying;
 }
 
++(NSString*)documentPath
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    return [paths objectAtIndex:0];
+}
+
 +(NSString*)userFilePath
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[SecurityContext getObject].details.loginName];
+    NSString *path = [[self documentPath] stringByAppendingPathComponent:[SecurityContext getObject].details.loginName];
     if (![[NSFileManager defaultManager] fileExistsAtPath:path])
         [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
     
@@ -555,6 +561,16 @@ static ProjectViewController* currentController;
 +(NSString*)avatarPath
 {
     NSString *path = [[self userFilePath] stringByAppendingPathComponent:AVATAR_PATH];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path])
+        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+    
+    return path;
+}
+
++(NSString*)sharedResourcePath
+{
+    NSString *path = [[self documentPath] stringByAppendingPathComponent:RESOURCE_PATH];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:path])
         [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
