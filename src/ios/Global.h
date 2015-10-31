@@ -34,6 +34,7 @@ extern const char* ProjectModeName[];
 
 + (void)initApplication;
 + (NetworkEngine*)engine;
++ (NSString*)sharedResourcePath;
 + (NSString*)tmpPath;
 + (NSString*)projectContentPath:(NSString*)projectId;
 + (NSString*)projectInfoPath:(NSString*)projectId;
