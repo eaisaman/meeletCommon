@@ -1,9 +1,58 @@
 define(
-    ["angular-lib", "jquery-lib"],
+    ["angular-lib", "jquery-lib", "velocity-lib"],
     function () {
         var Extension = function () {
             },
             e = new Extension();
+
+        function toggleAnimoState($element, clazz, state, callback) {
+            var animoData = $element.data("animo"),
+                classAnimo = animoData && animoData[clazz],
+                animoIsSet = false;
+
+            if (classAnimo) {
+                var animation = classAnimo.animation;
+
+                if (typeof animation === "string") {
+                    animoIsSet = /^(callout|transition)\./.test(animation);
+
+                    if (animoIsSet) {
+                        if (!$element.hasClass(clazz) && (state == null || $element.hasClass(clazz) ^ state)) {
+                            Velocity.animate.apply($element, [animation, _.extend({
+                                complete: function () {
+                                    callback && callback();
+                                }
+                            }, classAnimo.settings)]);
+                            $element.toggleClass(clazz);
+                        } else {
+                            $element.toggleClass(clazz);
+                            callback && callback();
+                        }
+                    }
+                } else {
+                    var from = animation.from,
+                        to = animation.to;
+
+                    animoIsSet = from && to;
+
+                    if (animoIsSet) {
+                        if (state == null || $element.hasClass(clazz) ^ state) {
+                            Velocity.animate.apply($element, [$element.hasClass(clazz) && from || to, _.extend({
+                                complete: function () {
+                                    callback && callback();
+                                }
+                            }, classAnimo.settings)]);
+                            $element.toggleClass(clazz);
+                        } else {
+                            $element.toggleClass(clazz);
+                            callback && callback();
+                        }
+                    }
+                }
+            }
+
+            return animoIsSet;
+        }
 
         Extension.prototype.attach = function (bindObj, injectObj) {
             var self = this,
@@ -43,6 +92,15 @@ define(
             }
         };
 
+        Extension.prototype.animoService = function () {
+            return function (scope, state, animationName) {
+                var animationValue = scope.animoStyles && scope.animoStyles[animationName];
+                if (animationValue && animationValue.animation) {
+                    return {'animo': _.object([state], [animationValue])};
+                }
+            }
+        }
+
         Extension.prototype.toggleExpandService = function (element, $q, $timeout, utilService) {
             return function (selector, event, state) {
                 event && event.stopPropagation && event.stopPropagation();
@@ -63,42 +121,50 @@ define(
                 else
                     $el = element;
 
-                if (state == null || $el.hasClass("expanded") ^ state) {
-                    if ($el.hasClass("expanded")) {
-                        $el.removeClass("expanded");
-                        $el.addClass("collapsing");
-                        if (!$el.css("animation-name") || $el.css("animation-name") === "none") {
-                            $timeout(function () {
-                                $el.removeClass("collapsing");
-                                defer.resolve(selector);
-                            });
-                        } else {
-                            utilService.onAnimationEnd($el).then(
-                                function () {
-                                    $el.removeClass("collapsing");
-                                    defer.resolve(selector);
-                                }
-                            );
-                        }
-                    } else {
-                        $el.addClass("expanded");
-
-                        if (!$el.css("animation-name") || $el.css("animation-name") === "none") {
-                            $timeout(function () {
-                                defer.resolve(selector);
-                            });
-                        } else {
-                            utilService.onAnimationEnd($el).then(
-                                function () {
-                                    defer.resolve(selector);
-                                }
-                            );
-                        }
-                    }
-                } else {
+                var animoIsSet = toggleAnimoState($el, "expanded", state, function () {
                     $timeout(function () {
                         defer.resolve(selector);
                     });
+                });
+
+                if (!animoIsSet) {
+                    if (state == null || $el.hasClass("expanded") ^ state) {
+                        if ($el.hasClass("expanded")) {
+                            $el.removeClass("expanded");
+                            $el.addClass("collapsing");
+                            if (!$el.css("animation-name") || $el.css("animation-name") === "none") {
+                                $timeout(function () {
+                                    $el.removeClass("collapsing");
+                                    defer.resolve(selector);
+                                });
+                            } else {
+                                utilService.onAnimationEnd($el).then(
+                                    function () {
+                                        $el.removeClass("collapsing");
+                                        defer.resolve(selector);
+                                    }
+                                );
+                            }
+                        } else {
+                            $el.addClass("expanded");
+
+                            if (!$el.css("animation-name") || $el.css("animation-name") === "none") {
+                                $timeout(function () {
+                                    defer.resolve(selector);
+                                });
+                            } else {
+                                utilService.onAnimationEnd($el).then(
+                                    function () {
+                                        defer.resolve(selector);
+                                    }
+                                );
+                            }
+                        }
+                    } else {
+                        $timeout(function () {
+                            defer.resolve(selector);
+                        });
+                    }
                 }
 
                 return defer.promise;
@@ -338,23 +404,31 @@ define(
                 } else
                     $el = element;
 
-                if (state == null || $el.hasClass("select") ^ state) {
-                    $el.toggleClass("select");
-                    if (!$el.css("animation-name") || $el.css("animation-name") === "none") {
-                        $timeout(function () {
-                            defer.resolve(selector);
-                        });
-                    } else {
-                        utilService.onAnimationEnd($el).then(
-                            function () {
-                                defer.resolve(selector);
-                            }
-                        );
-                    }
-                } else {
+                var animoIsSet = toggleAnimoState($el, "select", state, function () {
                     $timeout(function () {
                         defer.resolve(selector);
                     });
+                });
+
+                if (!animoIsSet) {
+                    if (state == null || $el.hasClass("select") ^ state) {
+                        $el.toggleClass("select");
+                        if (!$el.css("animation-name") || $el.css("animation-name") === "none") {
+                            $timeout(function () {
+                                defer.resolve(selector);
+                            });
+                        } else {
+                            utilService.onAnimationEnd($el).then(
+                                function () {
+                                    defer.resolve(selector);
+                                }
+                            );
+                        }
+                    } else {
+                        $timeout(function () {
+                            defer.resolve(selector);
+                        });
+                    }
                 }
 
                 return defer.promise;
