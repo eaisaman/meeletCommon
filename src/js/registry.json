@@ -1,0 +1,201 @@
+[
+  {
+    "feature": "BaseService",
+    "description": "Basic platform app services",
+    "serviceList": [
+      {
+        "name": "refreshUser",
+        "description": "Refresh user profile",
+        "parameters": [
+          "loginName"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "doLogin",
+        "description": "User login in",
+        "parameters": [
+          "loginName",
+          "password"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "doLogout",
+        "description": "User login out",
+        "parameters": [],
+        "communicationType": "callback"
+      },
+      {
+        "name": "restoreUserFromStorage",
+        "description": "Restore cached login user.",
+        "parameters": [],
+        "communicationType": "callback"
+      },
+      {
+        "name": "getUserDetail",
+        "description": "Get user and his projects",
+        "parameters": [
+          "userFilter"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "getProject",
+        "description": "Get project's profile.",
+        "parameters": [
+          "projectFilter"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "nextPage",
+        "description": "Navigate to next page.",
+        "parameters": [
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "prevPage",
+        "description": "Navigate to previous page.",
+        "parameters": [
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "gotoPage",
+        "description": "Jump to page.",
+        "parameters": [
+          "pageNum"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "firstPage",
+        "description": "Jump to first page.",
+        "parameters": [
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "exitPage",
+        "description": "Exit from surfing page.",
+        "parameters": [
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "loadPage",
+        "description": "Load page html content, add animation if defined.",
+        "parameters": [
+          "location",
+          "markCurrent"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "getState",
+        "description": "Get widget's state.",
+        "parameters": [
+          "widgetId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "setState",
+        "description": "Set widget's state.",
+        "parameters": [
+          "widgetId",
+          "state"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "playSound",
+        "description": "Play audio.",
+        "parameters": [
+          "url",
+          "playLoop"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "stopPlaySound",
+        "description": "Stop playing audio.",
+        "parameters": [
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "toggleSound",
+        "description": "Toggle playing audio.",
+        "parameters": [
+          "url",
+          "playLoop"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "playWidgetSound",
+        "description": "Play audio. Widget has states '*' and 'mute', which controls play or stop.",
+        "parameters": [
+          "widgetId",
+          "url",
+          "playLoop"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "stopPlayWidgetSound",
+        "description": "Stop playing audio. Widget controls play or stop.",
+        "parameters": [
+          "widgetId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "toggleWidgetSound",
+        "description": "Toggle playing audio. Widget controls play or stop.",
+        "parameters": [
+          "widgetId",
+          "url",
+          "playLoop"
+        ],
+        "communicationType": "callback"
+      }
+    ]
+  },
+  {
+    "feature": "FlowService",
+    "description": "Flow project app services",
+    "serviceList": [
+    ]
+  },
+  {
+    "feature": "BookService",
+    "description": "Book project app services",
+    "serviceList": [
+      {
+        "name": "takeAvatarPhoto",
+        "description": "Take photo for avatar use.",
+        "parameters": [
+        ],
+        "communicationType": "event"
+      },
+      {
+        "name": "startWidgetRecord",
+        "description": "Start recording. Widget controls the process",
+        "parameters": [
+        ],
+        "communicationType": "event"
+      },
+      {
+        "name": "stopWidgetRecord",
+        "description": "Stop recording. Widget controls the process",
+        "parameters": [
+        ],
+        "communicationType": "event"
+      }
+    ]
+  }
+]
