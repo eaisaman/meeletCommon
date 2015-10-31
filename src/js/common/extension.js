@@ -1,6 +1,6 @@
 define(
-    ["angular-lib", "jquery-lib", "velocity-lib"],
-    function () {
+    ["json!meta.json", "angular-lib", "jquery-lib", "velocity-lib"],
+    function (meta) {
         var Extension = function () {
             },
             e = new Extension();
@@ -93,8 +93,8 @@ define(
         };
 
         Extension.prototype.animoService = function () {
-            return function (scope, state, animationName) {
-                var animationValue = scope.animoStyles && scope.animoStyles[animationName];
+            return function (state, animationName) {
+                var animationValue = meta.animoStyles && meta.animoStyles[animationName];
                 if (animationValue && animationValue.animation) {
                     return {'animo': _.object([state], [animationValue])};
                 }
