@@ -17,7 +17,7 @@ define(
                     this.serviceRegistry = serviceRegistry;
                     this.angularConstants = angularConstants;
                     this.angularEventTypes = angularEventTypes;
-                    this.meta = angular.copy(meta);
+                    this.appMeta = this.pageMeta = angular.copy(meta);
 
                     _.extend(SoundContructor.prototype, _.pick(this, appService.$inject));
                 };
@@ -960,7 +960,7 @@ define(
 
             /* Services managed by registry are visible to designer, serving generated app. */
             function findPageElement(location) {
-                var widgetId = location.match(/[^page-].+$/)[0],
+                var widgetId = parseWidgetId(location),
                     $container = $("#main"),
                     $page = $container.children("#" + widgetId);
 
@@ -1090,7 +1090,7 @@ define(
                     locationIndex,
                     location = self.$rootScope.pickedPage;
 
-                self.meta.locations.every(function (loc, i) {
+                self.pageMeta.locations.every(function (loc, i) {
                     if (loc === location) {
                         locationIndex = i;
                         return false;
@@ -1099,26 +1099,26 @@ define(
                     return true;
                 });
 
-                if (locationIndex < self.meta.locations.length - 1) {
-                    return self.loadPage(self.meta.locations[locationIndex + 1]).then(
+                if (locationIndex < self.pageMeta.locations.length - 1) {
+                    return self.loadPage(self.pageMeta.locations[locationIndex + 1]).then(
                         function () {
                             var $current = findPageElement(location),
-                                $next = findPageElement(self.meta.locations[locationIndex + 1]),
+                                $next = findPageElement(self.pageMeta.locations[locationIndex + 1]),
                                 hasAnimation = false,
                                 fullName;
 
                             $current.addClass("forward");
 
-                            if (!_.isEmpty(self.meta.pageTransition)) {
-                                hasAnimation = self.meta.pageTransition.effect.type === "Animation";
+                            if (!_.isEmpty(self.pageMeta.pageTransition)) {
+                                hasAnimation = self.pageMeta.pageTransition.effect.type === "Animation";
 
-                                fullName = self.meta.pageTransition.artifactSpec.directiveName;
-                                if (self.meta.pageTransition.artifactSpec.version) {
-                                    fullName = fullName + "-" + self.meta.pageTransition.artifactSpec.version.replace(/\./g, "-")
+                                fullName = self.pageMeta.pageTransition.artifactSpec.directiveName;
+                                if (self.pageMeta.pageTransition.artifactSpec.version) {
+                                    fullName = fullName + "-" + self.pageMeta.pageTransition.artifactSpec.version.replace(/\./g, "-")
                                 }
 
                                 $current.attr(fullName, "");
-                                $current.attr("effect", self.meta.pageTransition.effect.name);
+                                $current.attr("effect", self.pageMeta.pageTransition.effect.name);
                             }
 
                             if (hasAnimation) {
@@ -1133,7 +1133,7 @@ define(
                                     fullName && $current.removeAttr(fullName);
                                     $next.css("visibility", "");
                                     setCurrentPage($next);
-                                    self.$rootScope.pickedPage = self.meta.locations[locationIndex + 1];
+                                    self.$rootScope.pickedPage = self.pageMeta.locations[locationIndex + 1];
 
                                     return self.setState(self.$rootScope.pickedPage.replace("page-", ""), "*").then(function () {
                                         return self.utilService.getResolveDefer(location);
@@ -1145,7 +1145,7 @@ define(
                                     $current.removeAttr("effect");
                                     fullName && $current.removeAttr(fullName);
                                     setCurrentPage($next);
-                                    self.$rootScope.pickedPage = self.meta.locations[locationIndex + 1];
+                                    self.$rootScope.pickedPage = self.pageMeta.locations[locationIndex + 1];
 
                                     return self.setState(self.$rootScope.pickedPage.replace("page-", ""), "*").then(function () {
                                         return self.utilService.getResolveDefer(location);
@@ -1167,7 +1167,7 @@ define(
                     locationIndex,
                     location = self.$rootScope.pickedPage;
 
-                self.meta.locations.every(function (loc, i) {
+                self.pageMeta.locations.every(function (loc, i) {
                     if (loc === location) {
                         locationIndex = i;
                         return false;
@@ -1177,25 +1177,25 @@ define(
                 });
 
                 if (locationIndex > 0) {
-                    return self.loadPage(self.meta.locations[locationIndex - 1]).then(
+                    return self.loadPage(self.pageMeta.locations[locationIndex - 1]).then(
                         function () {
                             var $current = findPageElement(location),
-                                $prev = findPageElement(self.meta.locations[locationIndex - 1]),
+                                $prev = findPageElement(self.pageMeta.locations[locationIndex - 1]),
                                 hasAnimation = false,
                                 fullName;
 
                             $prev.addClass("backward previousPage");
 
-                            if (!_.isEmpty(self.meta.pageTransition)) {
-                                hasAnimation = self.meta.pageTransition.effect.type === "Animation";
+                            if (!_.isEmpty(self.pageMeta.pageTransition)) {
+                                hasAnimation = self.pageMeta.pageTransition.effect.type === "Animation";
 
-                                fullName = self.meta.pageTransition.artifactSpec.directiveName;
-                                if (self.meta.pageTransition.artifactSpec.version) {
-                                    fullName = fullName + "-" + self.meta.pageTransition.artifactSpec.version.replace(/\./g, "-")
+                                fullName = self.pageMeta.pageTransition.artifactSpec.directiveName;
+                                if (self.pageMeta.pageTransition.artifactSpec.version) {
+                                    fullName = fullName + "-" + self.pageMeta.pageTransition.artifactSpec.version.replace(/\./g, "-")
                                 }
 
                                 $prev.attr(fullName, "");
-                                $prev.attr("effect", self.meta.pageTransition.effect.name);
+                                $prev.attr("effect", self.pageMeta.pageTransition.effect.name);
                             }
 
                             if (hasAnimation) {
@@ -1210,7 +1210,7 @@ define(
                                     fullName && $prev.removeAttr(fullName);
                                     $prev.css("visibility", "");
                                     setCurrentPage($prev);
-                                    self.$rootScope.pickedPage = self.meta.locations[locationIndex - 1];
+                                    self.$rootScope.pickedPage = self.pageMeta.locations[locationIndex - 1];
 
                                     return self.setState(self.$rootScope.pickedPage.replace("page-", ""), "*").then(function () {
                                         return self.utilService.getResolveDefer(location);
@@ -1222,7 +1222,7 @@ define(
                                     $prev.removeAttr("effect");
                                     fullName && $prev.removeAttr(fullName);
                                     setCurrentPage($prev);
-                                    self.$rootScope.pickedPage = self.meta.locations[locationIndex - 1];
+                                    self.$rootScope.pickedPage = self.pageMeta.locations[locationIndex - 1];
 
                                     return self.setState(self.$rootScope.pickedPage.replace("page-", ""), "*").then(function () {
                                         return self.utilService.getResolveDefer(location);
@@ -1245,7 +1245,7 @@ define(
                     $container = $("#main"),
                     currentLocation = self.$rootScope.pickedPage;
 
-                self.meta.locations.every(function (loc, i) {
+                self.pageMeta.locations.every(function (loc, i) {
                     if (loc === currentLocation) {
                         locationIndex = i;
                         return false;
@@ -1257,7 +1257,7 @@ define(
                 if (typeof pageNum === "string") {
                     var pageLoc = pageNum;
                     pageNum = null;
-                    self.meta.locations.every(function (loc, i) {
+                    self.pageMeta.locations.every(function (loc, i) {
                         if (loc === pageLoc) {
                             pageNum = i;
                             return false;
@@ -1267,15 +1267,13 @@ define(
                     });
                 }
 
-                if (pageNum < self.meta.locations.length && locationIndex !== pageNum) {
-                    var gotoLocation = self.meta.locations[pageNum];
+                if (pageNum < self.pageMeta.locations.length && locationIndex !== pageNum) {
+                    var gotoLocation = self.pageMeta.locations[pageNum];
 
-                    var m = gotoLocation.match(/[^page-].+$/),
-                        c = currentLocation.match(/[^page-].+$/);
-                    if (m && m.length && c && c.length) {
-                        var widgetId = m[0],
-                            currentWidgetId = c[0],
-                            $unloaded = $container.children("." + self.angularConstants.widgetClasses.holderClass + ":not(#" + currentWidgetId + ")" + ":not(#" + widgetId + ")");
+                    var widgetId = parseWidgetId(gotoLocation),
+                        currentWidgetId = parseWidgetId(currentLocation);
+                    if (widgetId && currentWidgetId) {
+                        var $unloaded = $container.children("." + self.angularConstants.widgetClasses.holderClass + ":not(#" + currentWidgetId + ")" + ":not(#" + widgetId + ")");
 
                         $unloaded.each(function (i, element) {
                             var scope = angular.element(element).scope();
@@ -1293,16 +1291,16 @@ define(
                             if (pageNum < locationIndex) {
                                 $goto.addClass("backward previousPage");
 
-                                if (!_.isEmpty(self.meta.pageTransition)) {
-                                    hasAnimation = self.meta.pageTransition.effect.type === "Animation";
+                                if (!_.isEmpty(self.pageMeta.pageTransition)) {
+                                    hasAnimation = self.pageMeta.pageTransition.effect.type === "Animation";
 
-                                    fullName = self.meta.pageTransition.artifactSpec.directiveName;
-                                    if (self.meta.pageTransition.artifactSpec.version) {
-                                        fullName = fullName + "-" + self.meta.pageTransition.artifactSpec.version.replace(/\./g, "-")
+                                    fullName = self.pageMeta.pageTransition.artifactSpec.directiveName;
+                                    if (self.pageMeta.pageTransition.artifactSpec.version) {
+                                        fullName = fullName + "-" + self.pageMeta.pageTransition.artifactSpec.version.replace(/\./g, "-")
                                     }
 
                                     $goto.attr(fullName, "");
-                                    $goto.attr("effect", self.meta.pageTransition.effect.name);
+                                    $goto.attr("effect", self.pageMeta.pageTransition.effect.name);
                                 }
 
                                 if (hasAnimation) {
@@ -1353,16 +1351,16 @@ define(
                             } else {
                                 $current.addClass("forward");
 
-                                if (!_.isEmpty(self.meta.pageTransition)) {
-                                    hasAnimation = self.meta.pageTransition.effect.type === "Animation";
+                                if (!_.isEmpty(self.pageMeta.pageTransition)) {
+                                    hasAnimation = self.pageMeta.pageTransition.effect.type === "Animation";
 
-                                    fullName = self.meta.pageTransition.artifactSpec.directiveName;
-                                    if (self.meta.pageTransition.artifactSpec.version) {
-                                        fullName = fullName + "-" + self.meta.pageTransition.artifactSpec.version.replace(/\./g, "-")
+                                    fullName = self.pageMeta.pageTransition.artifactSpec.directiveName;
+                                    if (self.pageMeta.pageTransition.artifactSpec.version) {
+                                        fullName = fullName + "-" + self.pageMeta.pageTransition.artifactSpec.version.replace(/\./g, "-")
                                     }
 
                                     $current.attr(fullName, "");
-                                    $current.attr("effect", self.meta.pageTransition.effect.name);
+                                    $current.attr("effect", self.pageMeta.pageTransition.effect.name);
                                 }
 
                                 if (hasAnimation) {
@@ -1425,12 +1423,26 @@ define(
             appService.prototype.exitPage = function () {
                 var currentLocation = this.$rootScope.pickedPage;
 
-                if (currentLocation !== this.meta.locations[0]) {
+                if (currentLocation !== this.pageMeta.locations[0]) {
                     return this.firstPage();
                 }
 
                 return this.utilService.getResolveDefer();
             };
+
+            function parseWidgetId(location) {
+                var m = location.match(/[^\/]+$/);
+
+                if (m && m.length) {
+                    location = m[0];
+                    m = location.match(/[^page-].+$/);
+                    if (m && m.length) {
+                        return m[0];
+                    }
+                }
+
+                return null;
+            }
 
             appService.prototype.loadPage = function (location, markCurrent) {
                 var self = this,
@@ -1439,19 +1451,21 @@ define(
                     pageCount = $pages.length,
                     currentLocation = self.$rootScope.pickedPage;
 
-                var m = location.match(/[^page-].+$/);
-                if (m && m.length) {
-                    var widgetId = m[0];
+                if (typeof location === "number") {
+                    if (location >= 0 && location < self.pageMeta.locations.length) {
+                        location = self.pageMeta.locations[location];
+                    }
+                }
+
+                var widgetId = parseWidgetId(location);
+                if (widgetId) {
                     if (!$container.children("#" + widgetId).length) {
                         if (pageCount >= self.angularConstants.maxPageCountInDom) {
                             var $unloaded;
 
                             if (currentLocation) {
-                                m = currentLocation.match(/[^page-].+$/);
-                                if (m && m.length) {
-                                    var currentWidgetId = m[0];
-                                    $unloaded = $container.children("." + self.angularConstants.widgetClasses.holderClass + ":not(#" + currentWidgetId + ")").eq(0);
-                                }
+                                var currentWidgetId = parseWidgetId(currentLocation);
+                                $unloaded = $container.children("." + self.angularConstants.widgetClasses.holderClass + ":not(#" + currentWidgetId + ")").eq(0);
                             } else {
                                 $unloaded = $pages.eq(0);
                             }
@@ -1469,7 +1483,7 @@ define(
                                 $prev,
                                 locationIndex;
 
-                            self.meta.locations.every(function (loc, i) {
+                            self.pageMeta.locations.every(function (loc, i) {
                                 if (loc === location) {
                                     locationIndex = i;
                                     return false;
@@ -1481,7 +1495,7 @@ define(
                                 var prevLocation, prevWidgetId;
 
                                 do {
-                                    prevLocation = self.meta.locations[locationIndex - 1], prevWidgetId = prevLocation.match(/[^page-].+$/)[0];
+                                    prevLocation = self.pageMeta.locations[locationIndex - 1], prevWidgetId = parseWidgetId(prevLocation);
                                     locationIndex--;
                                 } while (locationIndex >= 1 && !$container.children("#" + prevWidgetId).length);
 

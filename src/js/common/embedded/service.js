@@ -17,7 +17,7 @@ define(
                     this.serviceRegistry = serviceRegistry;
                     this.angularConstants = angularConstants;
                     this.angularEventTypes = angularEventTypes;
-                    this.meta = angular.copy(meta);
+                    this.appMeta = this.pageMeta = angular.copy(meta);
                 };
 
             appService.$inject = ["$rootScope", "$http", "$timeout", "$q", "$exceptionHandler", "$compile", "$cookies", "$cookieStore", "utilService", "angularConstants", "angularEventTypes", "serviceRegistry"];
@@ -52,6 +52,7 @@ define(
                         return impl.apply(this, arguments);
                     };
                 }
+
                 return function () {
                     var defer = self.$q.defer();
 
@@ -161,7 +162,7 @@ define(
 
             window.cordova && appModule.
                 config(["$provide", "$injector", function ($provide, $injector) {
-                    $provide.decorator("appService", ["$delegate", function($delegate) {
+                    $provide.decorator("appService", ["$delegate", function ($delegate) {
                         _.extend($delegate.constructor.prototype, appService.prototype);
                         return $delegate;
                     }]);
