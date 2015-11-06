@@ -1603,7 +1603,7 @@ define(
                             $widgetElement = $(element);
                             id = element.id;
                         } else {
-                            $widgetElement = $("#" + id);
+                    	    $widgetElement = $("#" + id);
                         }
 
                         $widgetElement.attr("state", state);
@@ -2156,7 +2156,7 @@ define(
                 }, function (err) {
                     if (!err) {
                         try {
-                            var fn = globalEdges && globalEdges[edgeClass].load;
+                            var fn = window.globalEdges && window.globalEdges[edgeClass].load;
                             fn && fn();
                         } catch (e) {
                             self.$exceptionHandler(e);
@@ -2173,7 +2173,7 @@ define(
             var self = this;
 
             try {
-                var fn = globalEdges && globalEdges[edgeClass].unload;
+                var fn = window.globalEdges && window.globalEdges[edgeClass].unload;
                 fn && fn();
             } catch (e) {
                 self.$exceptionHandler(e);

@@ -162,7 +162,7 @@ define(
                     var fn = featureItem.impl[serviceName];
                     if (fn) {
                         return function () {
-                            fn.apply(featureItem.impl, Array.prototype.slice.call(arguments));
+                            return fn.apply(featureItem.impl, Array.prototype.slice.call(arguments));
                         };
                     } else {
                         self.$log.warn("Function {0} not found on implementation of feature {1}".format(serviceName, feature));
