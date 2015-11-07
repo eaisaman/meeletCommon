@@ -14,9 +14,12 @@
 #define APP_ERROR_DOMAIN @"meeletCommonErrorDomain"
 #define APP_ERROR_OPEN_FILE_CODE -1
 #define APP_ERROR_PLAY_SOUND_CODE -2
+#define APP_ERROR_CREATE_FILE_CODE -3
 
 #define SETTINGS_BUNDLE_serverUrl_IDENTIFIER @"server_url"
 
+#define AppEventDeclare(x) extern NSString *x##Event;
+#define AppEventDefine(x) NSString *x##Event=@#x;
 #define ENUM_NAME(x,v) [NSString stringWithCString:x##Name[v] encoding:NSASCIIStringEncoding]
 
 typedef void (^ReponseBlock)(void);
@@ -30,9 +33,31 @@ typedef NS_ENUM(NSUInteger, ProjectMode) {
 
 extern const char* ProjectModeName[];
 
+AppEventDeclare(projectScan);
+AppEventDeclare(normalScan);
+AppEventDeclare(getProjectError);
+AppEventDeclare(getProjectModulesError);
+AppEventDeclare(deleteLocalProject);
+AppEventDeclare(downloadProjectStart);
+AppEventDeclare(downloadProjectStop);
+AppEventDeclare(downloadProjectDone);
+AppEventDeclare(downloadProjectError);
+AppEventDeclare(downloadProjectProgress);
+AppEventDeclare(downloadProjectModulesStart);
+AppEventDeclare(downloadProjectModulesDone);
+AppEventDeclare(downloadProjectModulesError);
+AppEventDeclare(downloadProjectModulesProgress);
+
+@protocol IEventDispatcher <NSObject>
+
+- (void)sendAppEventWithName:(NSString *)name body:(NSDictionary*)body;
+
+@end
+
 @interface Global : NSObject
 
 + (void)initApplication;
++ (void)initEventDispatcher:(id<IEventDispatcher>)dispatcher;
 + (NetworkEngine*)engine;
 + (NSString*)sharedResourcePath;
 + (NSString*)tmpPath;
@@ -40,6 +65,7 @@ extern const char* ProjectModeName[];
 + (NSString*)projectInfoPath:(NSString*)projectId;
 + (NSString*)projectsModulesPath;
 + (NSString*)embeddedPath;
++ (void)dispatchEvent:(NSString*)eventType eventObj:(NSDictionary*)eventObj;
 
 + (void)setLoginUser:(NSString*)loginName plainPassword:(NSString*)plainPassword userObj:(NSDictionary*)userObj;
 + (void)setLoginUser:(NSDictionary*)userObj;
@@ -50,9 +76,14 @@ extern const char* ProjectModeName[];
 + (void)downloadProject:(NSString*)projectId;
 + (void)pauseDownloadProject:(NSString*)projectId;
 + (void)scanProjectCode;
++ (void)scanQRCode;
 + (void)deleteLocalProject:(NSString*)projectId;
 + (void)showProject:(NSString*)projectId codeBlock:(ReponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock;
++ (void)showHostProject:(NSString*)projectId codeBlock:(ReponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock;
 + (NSString*)saveAvatar:(NSString*)projectId filePath:(NSString*)filePath;
+//Sometimes we need to display project content in an H5 app content, instead of displaying in a UIWebView alone.
+//We will clone app's www folder to some place and launch MainViewController there.
++ (NSError*)buildProjectHost;
 
 + (BOOL)isValidObjectId:(NSString*)idStr;
 + (NSDate*)parseDateString:(NSString*)dateString;
