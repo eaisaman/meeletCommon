@@ -75,7 +75,11 @@ define(
             };
 
             SoundContructor.prototype.play = function (url, callback) {
-                url = url || this.url;
+                if (url) {
+                    url = (window.APP_PROJECT_PATH || "") + url;
+                } else {
+                    url = this.url;
+                }
 
                 if (!this.offlineAudioContext) {
                     this.offlineAudioContext = new (
