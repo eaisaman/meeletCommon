@@ -328,7 +328,7 @@ var bt2Str = function(byteArray,start,end) {
     var host = params.host;
     var port = params.port;
 
-    var url = 'https://' + host;
+    var url = 'http://' + host;
     if(port) {
       url +=  ':' + port;
     }
