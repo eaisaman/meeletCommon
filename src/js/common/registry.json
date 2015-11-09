@@ -162,6 +162,33 @@
           "playLoop"
         ],
         "communicationType": "callback"
+      },
+      {
+        "name": "startChat",
+        "description": "Start chat.",
+        "parameters": [
+          "userId",
+          "chatId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "pauseChat",
+        "description": "Pause chat.",
+        "parameters": [
+          "userId",
+          "chatId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "stopChat",
+        "description": "Stop chat.",
+        "parameters": [
+          "userId",
+          "chatId"
+        ],
+        "communicationType": "callback"
       }
     ]
   },
