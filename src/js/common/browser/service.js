@@ -1736,6 +1736,18 @@ define(
                 return self.utilService.chain(arr);
             };
 
+            appService.prototype.startChat = function (userId, chatId) {
+                return this.utilService.getResolveDefer("1");
+            }
+
+            appService.prototype.pauseChat = function (userId, chatId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.stopChat = function (userId, chatId) {
+                return this.utilService.getResolveDefer();
+            }
+
             appModule.
                 config(['$httpProvider',
                     function ($httpProvider) {
