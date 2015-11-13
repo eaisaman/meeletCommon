@@ -32,4 +32,18 @@
 -(void) isPlayingSound:(CDVInvokedUrlCommand*)command;
 -(void) saveAvatar:(CDVInvokedUrlCommand*)command;
 
+-(void) createChat:(CDVInvokedUrlCommand*)command;
+-(void) connectChat:(CDVInvokedUrlCommand*)command;
+-(void) pauseChat:(CDVInvokedUrlCommand*)command;
+-(void) closeChat:(CDVInvokedUrlCommand*)command;
+-(void) deleteChat:(CDVInvokedUrlCommand*)command;
+-(void) createTopic:(CDVInvokedUrlCommand*)command;
+-(void) connectTopic:(CDVInvokedUrlCommand*)command;
+-(void) closeTopic:(CDVInvokedUrlCommand*)command;
+-(void) deleteTopic:(CDVInvokedUrlCommand*)command;
+-(void) createInbox:(CDVInvokedUrlCommand*)command;
+-(void) connectInbox:(CDVInvokedUrlCommand*)command;
+-(void) closeInbox:(CDVInvokedUrlCommand*)command;
+-(void) deleteInbox:(CDVInvokedUrlCommand*)command;
+
 @end

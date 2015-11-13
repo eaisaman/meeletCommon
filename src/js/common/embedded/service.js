@@ -64,7 +64,7 @@ define(
                             function (err) {
                                 defer.reject(err);
                             },
-                            "NativeBridge", functionName, Array.prototype.slice.call(arguments));
+                            "BaseNativeBridge", functionName, Array.prototype.slice.call(arguments));
 
                     }).apply(self, Array.prototype.slice.call(arguments));
 
@@ -159,6 +159,58 @@ define(
             appService.prototype.getProject = function (projectFilter) {
                 return this.cordovaPromise("getProject").apply(this, [JSON.stringify(projectFilter)]);
             };
+
+            appService.prototype.createChat = function (userId) {
+                return this.cordovaPromise("createChat").apply(this, [userId]);
+            }
+
+            appService.prototype.connectChat = function (userId, chatId) {
+                return this.cordovaPromise("connectChat").apply(this, [userId, chatId]);
+            }
+
+            appService.prototype.pauseChat = function (userId, chatId) {
+                return this.cordovaPromise("pauseChat").apply(this, [userId, chatId]);
+            }
+
+            appService.prototype.closeChat = function (userId, chatId) {
+                return this.cordovaPromise("closeChat").apply(this, [userId, chatId]);
+            }
+
+            appService.prototype.deleteChat = function (userId, chatId) {
+                return this.cordovaPromise("deleteChat").apply(this, [userId, chatId]);
+            }
+
+            appService.prototype.createTopic = function (userId) {
+                return this.cordovaPromise("createTopic").apply(this, [userId]);
+            }
+
+            appService.prototype.connectTopic = function (userId, topicId) {
+                return this.cordovaPromise("connectTopic").apply(this, [userId, topicId]);
+            }
+
+            appService.prototype.closeTopic = function (userId, topicId) {
+                return this.cordovaPromise("closeTopic").apply(this, [userId, topicId]);
+            }
+
+            appService.prototype.deleteTopic = function (userId, topicId) {
+                return this.cordovaPromise("deleteTopic").apply(this, [userId, topicId]);
+            }
+
+            appService.prototype.createInbox = function (userId) {
+                return this.cordovaPromise("createInbox").apply(this, [userId]);
+            }
+
+            appService.prototype.connectInbox = function (userId, inboxId) {
+                return this.cordovaPromise("connectInbox").apply(this, [userId, inboxId]);
+            }
+
+            appService.prototype.closeInbox = function (userId, inboxId) {
+                return this.cordovaPromise("closeInbox").apply(this, [userId, inboxId]);
+            }
+
+            appService.prototype.deleteInbox = function (userId, inboxId) {
+                return this.cordovaPromise("deleteInbox").apply(this, [userId, inboxId]);
+            }
 
             window.cordova && appModule.
                 config(["$provide", "$injector", function ($provide, $injector) {

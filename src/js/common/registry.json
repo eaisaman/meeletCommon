@@ -4,6 +4,16 @@
     "description": "Basic platform app services",
     "serviceList": [
       {
+        "name": "callService",
+        "description": "Call service in registry.",
+        "parameters": [
+          "feature",
+          "serviceName",
+          "args"
+        ],
+        "communicationType": "callback"
+      },
+      {
         "name": "refreshUser",
         "description": "Refresh user profile",
         "parameters": [
@@ -164,8 +174,16 @@
         "communicationType": "callback"
       },
       {
-        "name": "startChat",
-        "description": "Start chat.",
+        "name": "createChat",
+        "description": "Create chat.",
+        "parameters": [
+          "userId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "connectChat",
+        "description": "Connect to chat.",
         "parameters": [
           "userId",
           "chatId"
@@ -182,11 +200,90 @@
         "communicationType": "callback"
       },
       {
-        "name": "stopChat",
-        "description": "Stop chat.",
+        "name": "closeChat",
+        "description": "Close chat.",
         "parameters": [
           "userId",
           "chatId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "deleteChat",
+        "description": "Delete chat.",
+        "parameters": [
+          "userId",
+          "chatId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "createTopic",
+        "description": "Create topic.",
+        "parameters": [
+          "userId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "connectTopic",
+        "description": "Connect to topic.",
+        "parameters": [
+          "userId",
+          "topicId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "closeTopic",
+        "description": "Close topic.",
+        "parameters": [
+          "userId",
+          "topicId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "deleteTopic",
+        "description": "Delete topic.",
+        "parameters": [
+          "userId",
+          "topicId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "createInbox",
+        "description": "Create inbox.",
+        "parameters": [
+          "userId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "connectInbox",
+        "description": "Connect to inbox.",
+        "parameters": [
+          "userId",
+          "inboxId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "closeInbox",
+        "description": "Close inbox.",
+        "parameters": [
+          "userId",
+          "inboxId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "deleteInbox",
+        "description": "Delete inbox.",
+        "parameters": [
+          "userId",
+          "inboxId"
         ],
         "communicationType": "callback"
       }
