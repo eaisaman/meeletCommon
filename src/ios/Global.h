@@ -17,6 +17,8 @@
 #define APP_ERROR_CREATE_FILE_CODE -3
 
 #define SETTINGS_BUNDLE_serverUrl_IDENTIFIER @"server_url"
+#define SETTINGS_BUNDLE_chatserverHost_IDENTIFIER @"chat_server_host"
+#define SETTINGS_BUNDLE_chatserverPort_IDENTIFIER @"chat_server_port"
 
 #define AppEventDeclare(x) extern NSString *x##Event;
 #define AppEventDefine(x) NSString *x##Event=@#x;
@@ -84,6 +86,9 @@ AppEventDeclare(downloadProjectModulesProgress);
 //Sometimes we need to display project content in an H5 app content, instead of displaying in a UIWebView alone.
 //We will clone app's www folder to some place and launch MainViewController there.
 + (NSError*)buildProjectHost;
++ (void)sendChatMessage:(NSString*)userId chatId:(NSString*)chatId payload:(NSDictionary*)paylod codeBlock:(StringResponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock;
++ (void)sendTopicMessage:(NSString*)userId topicId:(NSString*)topicId payload:(NSDictionary*)paylod codeBlock:(StringResponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock;
++ (void)sendInboxMessage:(NSString*)userId inboxId:(NSString*)inboxId payload:(NSDictionary*)paylod codeBlock:(StringResponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock;
 
 + (BOOL)isValidObjectId:(NSString*)idStr;
 + (NSDate*)parseDateString:(NSString*)dateString;

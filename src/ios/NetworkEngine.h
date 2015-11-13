@@ -21,6 +21,8 @@ typedef void (^DownloadProgressBlock)(double progress);
 @property (nonatomic, retain) CommonNetworkEngine *engine;
 @property (nonatomic, readonly) NSString* serverUrl;
 @property (nonatomic, readonly) int port;
+@property (nonatomic, readonly) NSString* chatServerHost;
+@property (nonatomic, readonly) NSString* chatServerPort;
 
 +(ResubmittableRecordStore*)recordStore;
 -(void)initEngine;
