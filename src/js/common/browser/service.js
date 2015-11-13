@@ -1750,7 +1750,8 @@ define(
             };
 
             appService.prototype.getServerUrl = function () {
-                return this.utilService.getResolveDefer({data:{result:"OK", resultValue:""}});
+                //For Debug Use, Don't commit!!!
+                return this.utilService.getResolveDefer({data:{result:"OK", resultValue:"http://127.0.0.1:3000"}});
             };
 
             appService.prototype.getDeviceId = function () {
@@ -1773,7 +1774,8 @@ define(
                     url: (window.serverUrl || "") + '/api/public/chat',
                     params: {
                         userId: userId,
-                        projectId: projectId
+                        projectId: projectId,
+                        route: window.pomeloContext.route
                     }
                 }).then(function (result) {
                     if (result.data.result === "OK") {
@@ -1953,7 +1955,8 @@ define(
                     params: {
                         userId: userId,
                         chatId: chatId,
-                        uids: JSON.stringify(uids)
+                        uids: JSON.stringify(uids),
+                        route: widnow.pomeloContext.route
                     }
                 }).then(function (result) {
                     if (result.data.result === "OK") {
@@ -1980,6 +1983,27 @@ define(
                                 return defer.promise;
                             }
                         );
+                    } else {
+                        return self.utilService.getRejectDefer(result.data.reason);
+                    }
+                }, function (err) {
+                    return self.utilService.getRejectDefer(err);
+                });
+            }
+
+            appService.prototype.acceptInviteChat = function (userId, chatId) {
+                var self =  this;
+
+                return self.$http({
+                    method: 'PUT',
+                    url: (window.serverUrl || "") + '/api/public/acceptInvite',
+                    params: {
+                        userId: userId,
+                        chatId: chatId
+                    }
+                }).then(function (result) {
+                    if (result.data.result === "OK") {
+                        return self.connectChat(userId, chatId);
                     } else {
                         return self.utilService.getRejectDefer(result.data.reason);
                     }
@@ -2039,7 +2063,8 @@ define(
                     url: (window.serverUrl || "") + '/api/public/topic',
                     params: {
                         userId: userId,
-                        chatId: chatId
+                        chatId: chatId,
+                        route: window.pomeloContext.route
                     }
                 }).then(function (result) {
                     if (result.data.result === "OK") {
@@ -2233,47 +2258,54 @@ define(
                 });
             }
 
-            appService.prototype.closeTopic = function (userId, chatId, topicFilter) {
+            appService.prototype.acceptInviteTopic = function (userId, topicId) {
                 var self =  this;
 
-                topicFilter = topicFilter || {};
+                return self.$http({
+                    method: 'PUT',
+                    url: (window.serverUrl || "") + '/api/public/acceptInviteTopic',
+                    params: {
+                        userId: userId,
+                        topicId: topicId
+                    }
+                });
+            }
+
+            appService.prototype.closeTopic = function (userId, topicId) {
+                var self =  this;
+
                 return self.$http({
                     method: 'PUT',
                     url: (window.serverUrl || "") + '/api/public/closeTopic',
                     params: {
                         userId: userId,
-                        topicFilter: JSON.stringify(topicFilter)
+                        topicId: topicId
                     }
                 }).then(function (result) {
                     if (result.data.result === "OK") {
-                        var topicIdArray = result.data.resultValue;
-                        if (topicIdArray && topicIdArray.length) {
-                            return self.utilService.callPomelo(
-                                function(pomelo, deviceId) {
-                                    var defer = self.$q.defer();
+                        return self.utilService.callPomelo(
+                            function(pomelo, deviceId) {
+                                var defer = self.$q.defer();
 
-                                    pomelo.request("chat.chatHandler.closeTopic", {
-                                        userId: userId,
-                                        chatId: chatId,
-                                        topicId: topicIdArray
-                                    }, function(data) {
-                                        switch(data.code) {
-                                            case 500:
-                                                defer.reject(data.msg);
-                                                break;
-                                            case 200:
-                                                defer.resolve();
-                                                break;
-                                            default:
-                                                defer.reject("Unkown return code " + data.code);
-                                        }
-                                    });
-                                    return defer.promise;
-                                }
-                            );
-                        } else {
-                            return self.utilService.getResolveDefer();
-                        }
+                                pomelo.request("chat.chatHandler.closeTopic", {
+                                    userId: userId,
+                                    chatId: chatId,
+                                    topicId: topicId
+                                }, function(data) {
+                                    switch(data.code) {
+                                        case 500:
+                                            defer.reject(data.msg);
+                                            break;
+                                        case 200:
+                                            defer.resolve();
+                                            break;
+                                        default:
+                                            defer.reject("Unkown return code " + data.code);
+                                    }
+                                });
+                                return defer.promise;
+                            }
+                        );
                     } else {
                         return self.utilService.getRejectDefer(result.data.reason);
                     }
