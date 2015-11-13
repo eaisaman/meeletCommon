@@ -328,7 +328,9 @@ var bt2Str = function(byteArray,start,end) {
     var host = params.host;
     var port = params.port;
 
-    var url = 'https://' + host;
+    //Use HTTP Mode, do correspondent change in server side app.js
+    //var url = 'http://' + host;
+    var url = 'http://' + host;
     if(port) {
       url +=  ':' + port;
     }
