@@ -12,6 +12,9 @@
 @interface BaseNativeBridge : CDVPlugin
 
 -(void) getServerUrl:(CDVInvokedUrlCommand*)command;
+-(void) getDeviceId:(CDVInvokedUrlCommand*)command;
+-(void) getChatServerHost:(CDVInvokedUrlCommand*)command;
+-(void) getChatServerPort:(CDVInvokedUrlCommand*)command;
 -(void) getUserDetail:(CDVInvokedUrlCommand*)command;
 -(void) scanProjectCode:(CDVInvokedUrlCommand*)command;
 -(void) checkProjectMode:(CDVInvokedUrlCommand*)command;
@@ -45,5 +48,8 @@
 -(void) connectInbox:(CDVInvokedUrlCommand*)command;
 -(void) closeInbox:(CDVInvokedUrlCommand*)command;
 -(void) deleteInbox:(CDVInvokedUrlCommand*)command;
+-(void) sendChatMessage:(CDVInvokedUrlCommand*)command;
+-(void) sendTopicMessage:(CDVInvokedUrlCommand*)command;
+-(void) sendInboxMessage:(CDVInvokedUrlCommand*)command;
 
 @end

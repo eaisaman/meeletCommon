@@ -32,6 +32,9 @@
 {
     int port = 80;
     NSString* serverUrl = nil;
+    NSString *finalPath = [[[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"] stringByAppendingPathComponent:@"Root.plist"];
+    NSDictionary *settingsDict = [NSDictionary dictionaryWithContentsOfFile:finalPath];
+    NSArray *prefSpecifierArray = [settingsDict objectForKey:@"PreferenceSpecifiers"];
     
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
     NSString* urlValue = [standardUserDefaults objectForKey:SETTINGS_BUNDLE_serverUrl_IDENTIFIER];
@@ -41,10 +44,6 @@
         if(splits.count>1)
             port = [splits[1] intValue];
     } else {
-        NSString *finalPath = [[[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"] stringByAppendingPathComponent:@"Root.plist"];
-        NSDictionary *settingsDict = [NSDictionary dictionaryWithContentsOfFile:finalPath];
-        NSArray *prefSpecifierArray = [settingsDict objectForKey:@"PreferenceSpecifiers"];
-        
         for (NSDictionary *prefItem in prefSpecifierArray)
         {
             NSString *keyValueStr = [prefItem objectForKey:@"Key"];
@@ -62,8 +61,42 @@
             }
         }
     }
+
+    NSString* chatSeverHostValue = [standardUserDefaults objectForKey:SETTINGS_BUNDLE_chatserverHost_IDENTIFIER];
+    if (!chatSeverHostValue) {
+        for (NSDictionary *prefItem in prefSpecifierArray)
+        {
+            NSString *keyValueStr = [prefItem objectForKey:@"Key"];
+            id defaultValue = [prefItem objectForKey:@"DefaultValue"];
+            
+            if ([keyValueStr isEqualToString:SETTINGS_BUNDLE_chatserverHost_IDENTIFIER] && defaultValue)
+            {
+                chatSeverHostValue = defaultValue;
+
+                [standardUserDefaults registerDefaults:[NSDictionary dictionaryWithObject:defaultValue forKey:SETTINGS_BUNDLE_chatserverHost_IDENTIFIER]];
+                break;
+            }
+        }
+    }
     
-    if(serverUrl==nil || serverUrl.length == 0) {
+    NSString* chatSeverPortValue = [standardUserDefaults objectForKey:SETTINGS_BUNDLE_chatserverPort_IDENTIFIER];
+    if (!chatSeverHostValue) {
+        for (NSDictionary *prefItem in prefSpecifierArray)
+        {
+            NSString *keyValueStr = [prefItem objectForKey:@"Key"];
+            id defaultValue = [prefItem objectForKey:@"DefaultValue"];
+            
+            if ([keyValueStr isEqualToString:SETTINGS_BUNDLE_chatserverPort_IDENTIFIER] && defaultValue)
+            {
+                chatSeverPortValue = defaultValue;
+                
+                [standardUserDefaults registerDefaults:[NSDictionary dictionaryWithObject:defaultValue forKey:SETTINGS_BUNDLE_chatserverPort_IDENTIFIER]];
+                break;
+            }
+        }
+    }
+
+    if(serverUrl==nil || serverUrl.length == 0 || chatSeverHostValue==nil || chatSeverHostValue.length == 0 || chatSeverPortValue==nil || chatSeverPortValue.length == 0) {
         UIAlertView *alert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"")
                                                       message:NSLocalizedString(@"ServerUrlEmptyError", @"")
                                                      delegate:self
@@ -75,7 +108,9 @@
     
     _serverUrl = serverUrl;
     _port = port;
-    
+    _chatServerHost = chatSeverHostValue;
+    _chatServerPort = chatSeverPortValue;
+
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [headers setValue:@"iOS" forKey:@"x-client-identifier"];
     self.engine = [CommonNetworkEngine getObject:self.serverUrl customHeaderFields:headers];

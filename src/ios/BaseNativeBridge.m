@@ -8,6 +8,7 @@
 
 #import "BaseNativeBridge.h"
 #import "Global.h"
+#import "UIDevice+IdentifierAddition.h"
 #import <Pods/JSONKit/JSONKit.h>
 
 @implementation BaseNativeBridge
@@ -26,9 +27,27 @@
     return @{@"data":@{@"result":@"ERROR"}};
 }
 
+-(void) getDeviceId:(CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":@{@"result":@"OK", @"resultValue":[[UIDevice currentDevice] uniqueDeviceIdentifier]}}];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 -(void) getServerUrl:(CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":@{@"result":@"OK", @"resultValue":[NSString stringWithFormat:@"http://%@:%i", [Global engine].serverUrl, [Global engine].port]}}];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+-(void) getChatServerHost:(CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":@{@"result":@"OK", @"resultValue":[[Global engine] chatServerHost]}}];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+-(void) getChatServerPort:(CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":@{@"result":@"OK", @"resultValue":[[Global engine] chatServerPort]}}];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -632,5 +651,68 @@
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
     
+}
+
+-(void) sendChatMessage:(CDVInvokedUrlCommand*)command
+{
+    if (command.arguments && command.arguments.count == 3) {
+        NSString* userId = command.arguments[0];
+        NSString* chatId = command.arguments[1];
+        NSDictionary *payload = command.arguments[2];
+        
+        [Global sendChatMessage:userId chatId:chatId payload:payload codeBlock:^(NSString *str) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":[str objectFromJSONString]}];
+            
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } errorBlock:^(NSError *error) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    } else {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Incorrect argument number."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+-(void) sendTopicMessage:(CDVInvokedUrlCommand*)command
+{
+    if (command.arguments && command.arguments.count == 3) {
+        NSString *userId = command.arguments[0];
+        NSString *topicId = command.arguments[1];
+        NSDictionary *payload = command.arguments[2];
+        
+        [Global sendTopicMessage:userId topicId:topicId payload:payload codeBlock:^(NSString *str) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":[str objectFromJSONString]}];
+            
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } errorBlock:^(NSError *error) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    } else {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Incorrect argument number."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+-(void) sendInboxMessage:(CDVInvokedUrlCommand*)command
+{
+    if (command.arguments && command.arguments.count == 3) {
+        NSString *userId = command.arguments[0];
+        NSString *inboxId = command.arguments[1];
+        NSDictionary *payload = command.arguments[2];
+        
+        [Global sendInboxMessage:userId inboxId:inboxId payload:payload codeBlock:^(NSString *str) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"data":[str objectFromJSONString]}];
+            
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } errorBlock:^(NSError *error) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    } else {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Incorrect argument number."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
 }
 @end

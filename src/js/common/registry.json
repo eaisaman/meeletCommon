@@ -177,7 +177,17 @@
         "name": "createChat",
         "description": "Create chat.",
         "parameters": [
-          "userId"
+          "userId",
+          "projectId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "startChat",
+        "description": "Start chat.",
+        "parameters": [
+          "userId",
+          "chatId"
         ],
         "communicationType": "callback"
       },
@@ -191,8 +201,27 @@
         "communicationType": "callback"
       },
       {
+        "name": "inviteChat",
+        "description": "Connect to chat.",
+        "parameters": [
+          "userId",
+          "chatId",
+          "uids"
+        ],
+        "communicationType": "callback"
+      },
+      {
         "name": "pauseChat",
         "description": "Pause chat.",
+        "parameters": [
+          "userId",
+          "chatId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "resumeChat",
+        "description": "Resume chat.",
         "parameters": [
           "userId",
           "chatId"
@@ -209,8 +238,8 @@
         "communicationType": "callback"
       },
       {
-        "name": "deleteChat",
-        "description": "Delete chat.",
+        "name": "createTopic",
+        "description": "Create topic.",
         "parameters": [
           "userId",
           "chatId"
@@ -218,19 +247,33 @@
         "communicationType": "callback"
       },
       {
-        "name": "createTopic",
-        "description": "Create topic.",
+        "name": "pauseTopic",
+        "description": "Pause topic.",
         "parameters": [
-          "userId"
+          "userId",
+          "chatId",
+          "topicId"
         ],
         "communicationType": "callback"
       },
       {
-        "name": "connectTopic",
-        "description": "Connect to topic.",
+        "name": "resumeTopic",
+        "description": "Pause topic.",
         "parameters": [
           "userId",
+          "chatId",
           "topicId"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "inviteTopic",
+        "description": "Invite to join topic.",
+        "parameters": [
+          "userId",
+          "chatId",
+          "topicId",
+          "uids"
         ],
         "communicationType": "callback"
       },
@@ -239,51 +282,30 @@
         "description": "Close topic.",
         "parameters": [
           "userId",
+          "chatId",
           "topicId"
         ],
         "communicationType": "callback"
       },
       {
-        "name": "deleteTopic",
-        "description": "Delete topic.",
+        "name": "sendChatMessage",
+        "description": "Send chat message.",
         "parameters": [
           "userId",
-          "topicId"
+          "chatId",
+          "uids",
+          "payload"
         ],
         "communicationType": "callback"
       },
       {
-        "name": "createInbox",
-        "description": "Create inbox.",
-        "parameters": [
-          "userId"
-        ],
-        "communicationType": "callback"
-      },
-      {
-        "name": "connectInbox",
-        "description": "Connect to inbox.",
+        "name": "sendTopicMessage",
+        "description": "Send topic message.",
         "parameters": [
           "userId",
-          "inboxId"
-        ],
-        "communicationType": "callback"
-      },
-      {
-        "name": "closeInbox",
-        "description": "Close inbox.",
-        "parameters": [
-          "userId",
-          "inboxId"
-        ],
-        "communicationType": "callback"
-      },
-      {
-        "name": "deleteInbox",
-        "description": "Delete inbox.",
-        "parameters": [
-          "userId",
-          "inboxId"
+          "chatId",
+          "topicId",
+          "payload"
         ],
         "communicationType": "callback"
       }

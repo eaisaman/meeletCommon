@@ -2180,6 +2180,52 @@ define(
             }
         };
 
+        utilService.prototype.initPomelo = function() {
+            var self = this;
+
+            if (window.pomeloContext) {
+                return self.timeout(
+                    function() {
+                        var defer = self.$q.defer();
+
+                        pomelo.init({host:window.pomeloContext.host, port:window.pomeloContext.port,log:true}, function() {
+                            defer.resolve();
+                        }, function(err) {
+                            defer.reject(err);
+                        });
+
+                        return defer.promise;
+                    },
+                    null,
+                    self.angularConstants.pomeloInitTimeout
+                );
+            } else {
+                return self.getRejectDefer("Pomelo context not initialized.");
+            }
+        }
+
+        utilService.prototype.callPomelo = function(callback) {
+            var self = this;
+
+            if (window.pomeloContext) {
+                return self.initPomelo().then(
+                    function(){
+                        return self.timeout(
+                            function() {
+                                return callback(pomelo, window.pomeloContext.deviceId);
+                            },
+                            null,
+                            self.angularConstants.pomeloRouteTimeout
+                        );
+                    }, function(err) {
+                        return self.getRejectDefer(err);
+                    }
+                );
+            } else {
+                return self.getRejectDefer("Pomelo context not initialized.");
+            }
+        }
+
         return function (appModule) {
             appModule.
                 config(["$provide", function ($provide) {

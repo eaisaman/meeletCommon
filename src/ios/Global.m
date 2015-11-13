@@ -632,6 +632,21 @@ static id<IEventDispatcher> eventDispatcher;
     return  error;
 }
 
++(void) sendChatMessage:(NSString *)userId chatId:(NSString *)chatId payload:(NSDictionary *)paylod codeBlock:(StringResponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock
+{
+    
+}
+
++(void) sendInboxMessage:(NSString *)userId inboxId:(NSString *)inboxId payload:(NSDictionary *)paylod codeBlock:(StringResponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock
+{
+    
+}
+
++(void)sendTopicMessage:(NSString *)userId topicId:(NSString *)topicId payload:(NSDictionary *)paylod codeBlock:(StringResponseBlock)codeBlock errorBlock:(ErrorBlock)errorBlock
+{
+    
+}
+
 +(NSString*) saveAvatar:(NSString*)projectId filePath:(NSString*)filePath
 {
     NSFileManager *manager = [NSFileManager defaultManager];

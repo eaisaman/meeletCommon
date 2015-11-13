@@ -322,7 +322,7 @@ var bt2Str = function(byteArray,start,end) {
   var id = 1;
   var callbacks = {};
 
-  pomelo.init = function(params, cb){
+  pomelo.init = function(params, cb, errorCb){
     pomelo.params = params;
     params.debug = true;
     var host = params.host;
@@ -359,6 +359,9 @@ var bt2Str = function(byteArray,start,end) {
 
     socket.on('error', function(err) {
       console.log(err);
+      if (errorCb) {
+        errorCb(err);
+      }
     });
 
     socket.on('disconnect', function(reason) {
