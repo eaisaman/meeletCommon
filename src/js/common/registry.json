@@ -202,11 +202,20 @@
       },
       {
         "name": "inviteChat",
-        "description": "Connect to chat.",
+        "description": "Invite to join chat.",
         "parameters": [
           "userId",
           "chatId",
           "uids"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "acceptInvite",
+        "description": "Accept invitation to chat.",
+        "parameters": [
+          "userId",
+          "chatId"
         ],
         "communicationType": "callback"
       },
@@ -278,11 +287,19 @@
         "communicationType": "callback"
       },
       {
+        "name": "acceptInviteTopic",
+        "description": "Accept invitation to join topic.",
+        "parameters": [
+          "userId",
+          "topicId"
+        ],
+        "communicationType": "callback"
+      },
+      {
         "name": "closeTopic",
         "description": "Close topic.",
         "parameters": [
           "userId",
-          "chatId",
           "topicId"
         ],
         "communicationType": "callback"
