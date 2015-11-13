@@ -36,6 +36,22 @@ typedef void (^DownloadProgressBlock)(double progress);
 -(BOOL) downloadProjectInProgress:(NSString *)projectId;
 -(void) pauseDownloadProject:(NSString*)projectId;
 
+-(CommonNetworkOperation*) createChat:(NSString*)userId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) connectChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) closeChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) deleteChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) pauseChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+
+-(CommonNetworkOperation*) createTopic:(NSString*)userId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) connectTopic:(NSString*)userId topicId:(NSString*)topicId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) closeTopic:(NSString*)userId topicId:(NSString*)topicId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) deleteTopic:(NSString*)userId topicId:(NSString*)topicId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+
+-(CommonNetworkOperation*) createInbox:(NSString*)userId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) connectInbox:(NSString*)userId inboxId:(NSString*)inboxId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) closeInbox:(NSString*)userId inboxId:(NSString*)inboxId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+-(CommonNetworkOperation*) deleteInbox:(NSString*)userId inboxId:(NSString*)inboxId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock;
+
 @end
 
 #endif

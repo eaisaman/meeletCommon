@@ -244,60 +244,67 @@ static id<IEventDispatcher> eventDispatcher;
 
 + (void)downloadModules
 {
-    [[self engine] downloadModules:^(CommonNetworkOperation *completedOperation) {
-        DLog(@"Download modules complete");
-        
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *projectModulesPath = [self projectsModulesPath];
+
+    if ([manager fileExistsAtPath:projectModulesPath]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self dispatchEvent:downloadProjectModulesDoneEvent eventObj:@{}];
         });
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSFileManager *manager = [NSFileManager defaultManager];
-            NSString *tmpPath = [[Global tmpPath] stringByAppendingPathComponent:@"modules.zip"];
-            NSString *moduleFolderTmpPath = [[Global tmpPath] stringByAppendingPathComponent:@"modules"];
-            NSString *projectModulesPath = [self projectsModulesPath];
+    } else {
+        [[self engine] downloadModules:^(CommonNetworkOperation *completedOperation) {
+            DLog(@"Download modules complete");
             
-            if ([manager fileExistsAtPath:tmpPath]) {
-                //Compare time of downloaded temp file to that of project module path
-                NSDate *downloadTime = nil, *tmpDownloadTime = nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self dispatchEvent:downloadProjectModulesDoneEvent eventObj:@{}];
+            });
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSString *tmpPath = [[Global tmpPath] stringByAppendingPathComponent:@"modules.zip"];
+                NSString *moduleFolderTmpPath = [[Global tmpPath] stringByAppendingPathComponent:@"modules"];
                 
-                NSDictionary *tmpAttrs = [manager attributesOfItemAtPath:tmpPath error:nil];
-                if (tmpAttrs != nil) {
-                    tmpDownloadTime = (NSDate*)[tmpAttrs objectForKey: NSFileCreationDate];
-                }
-                
-                if ([manager fileExistsAtPath:projectModulesPath]) {
-                    NSDictionary *attrs = [manager attributesOfItemAtPath:projectModulesPath error:nil];
-                    if (attrs != nil) {
-                        downloadTime = (NSDate*)[attrs objectForKey: NSFileCreationDate];
+                if ([manager fileExistsAtPath:tmpPath]) {
+                    //Compare time of downloaded temp file to that of project module path
+                    NSDate *downloadTime = nil, *tmpDownloadTime = nil;
+                    
+                    NSDictionary *tmpAttrs = [manager attributesOfItemAtPath:tmpPath error:nil];
+                    if (tmpAttrs != nil) {
+                        tmpDownloadTime = (NSDate*)[tmpAttrs objectForKey: NSFileCreationDate];
                     }
-                }
-                
-                if (!tmpDownloadTime || !downloadTime || [tmpDownloadTime compare:downloadTime] == NSOrderedDescending) {
-                    DLog(@"Start unzip...");
-                    if ([manager fileExistsAtPath:moduleFolderTmpPath]) {
-                        [manager removeItemAtPath:moduleFolderTmpPath error:nil];
-                    }
-                    [SSZipArchive unzipFileAtPath:tmpPath toDestination:moduleFolderTmpPath];
                     
                     if ([manager fileExistsAtPath:projectModulesPath]) {
-                        [manager removeItemAtPath:projectModulesPath error:nil];
+                        NSDictionary *attrs = [manager attributesOfItemAtPath:projectModulesPath error:nil];
+                        if (attrs != nil) {
+                            downloadTime = (NSDate*)[attrs objectForKey: NSFileCreationDate];
+                        }
                     }
-                    [manager moveItemAtPath:moduleFolderTmpPath toPath:projectModulesPath error:nil];
+                    
+                    if (!tmpDownloadTime || !downloadTime || [tmpDownloadTime compare:downloadTime] == NSOrderedDescending) {
+                        DLog(@"Start unzip...");
+                        if ([manager fileExistsAtPath:moduleFolderTmpPath]) {
+                            [manager removeItemAtPath:moduleFolderTmpPath error:nil];
+                        }
+                        [SSZipArchive unzipFileAtPath:tmpPath toDestination:moduleFolderTmpPath];
+                        
+                        if ([manager fileExistsAtPath:projectModulesPath]) {
+                            [manager removeItemAtPath:projectModulesPath error:nil];
+                        }
+                        [manager moveItemAtPath:moduleFolderTmpPath toPath:projectModulesPath error:nil];
+                    }
                 }
-            }
-        });
-    } onError:^(CommonNetworkOperation *completedOperation, NSString *prevResponsePath, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self dispatchEvent:downloadProjectModulesErrorEvent eventObj:@{@"error":[error localizedDescription]}];
-        });
-    } progressBlock:^(double progress) {
-        DLog(@"Download in progress %.2f", progress);
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self dispatchEvent:downloadProjectModulesProgressEvent eventObj:@{@"progress":[NSNumber numberWithUnsignedLong:(unsigned long)ceilf(progress * 100)]}];
-        });
-    }];
+            });
+        } onError:^(CommonNetworkOperation *completedOperation, NSString *prevResponsePath, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self dispatchEvent:downloadProjectModulesErrorEvent eventObj:@{@"error":[error localizedDescription]}];
+            });
+        } progressBlock:^(double progress) {
+            DLog(@"Download in progress %.2f", progress);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self dispatchEvent:downloadProjectModulesProgressEvent eventObj:@{@"progress":[NSNumber numberWithUnsignedLong:(unsigned long)ceilf(progress * 100)]}];
+            });
+        }];
+    }
 }
 
 + (void)downloadProject:(NSString*)projectId
@@ -785,7 +792,7 @@ static id<IEventDispatcher> eventDispatcher;
 
 +(NSString*)projectsModulesPath
 {
-    NSString *path = [[self projectsContentPath] stringByAppendingPathComponent:PROJECT_MODULES_PATH];
+    NSString *path = [[self documentPath] stringByAppendingPathComponent:PROJECT_MODULES_PATH];
     
     return path;
 }

@@ -75,7 +75,11 @@ define(
             };
 
             SoundContructor.prototype.play = function (url, callback) {
-                url = url || this.url;
+                if (url) {
+                    url = (window.APP_PROJECT_PATH || "") + url;
+                } else {
+                    url = this.url;
+                }
 
                 if (!this.offlineAudioContext) {
                     this.offlineAudioContext = new (
@@ -174,6 +178,15 @@ define(
             appService.prototype.unregisterService = function () {
                 this.serviceRegistry && this.serviceRegistry.unregister(FEATURE, PLATFORM);
             };
+
+            appService.prototype.callService = function (feature, serviceName, args) {
+                if (serviceName !== "callService") {
+                    var fn = this.serviceRegistry.invoke(feature, serviceName);
+                    return fn.apply(null, args || []);
+                } else {
+                    return this.utilService.getRejectDefer("Cannot call self.");
+                }
+            }
 
             appService.prototype.loadRepoArtifact = function (repoArtifact, repoLibId, repoLibName, version, demoSelector) {
                 version = version || repoArtifact.versionList[repoArtifact.versionList.length - 1].name;
@@ -1736,15 +1749,55 @@ define(
                 return self.utilService.chain(arr);
             };
 
-            appService.prototype.startChat = function (userId, chatId) {
+            appService.prototype.createChat = function (userId) {
                 return this.utilService.getResolveDefer("1");
+            }
+
+            appService.prototype.connectChat = function (userId, chatId) {
+                return this.utilService.getResolveDefer();
             }
 
             appService.prototype.pauseChat = function (userId, chatId) {
                 return this.utilService.getResolveDefer();
             }
 
-            appService.prototype.stopChat = function (userId, chatId) {
+            appService.prototype.closeChat = function (userId, chatId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.deleteChat = function (userId, chatId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.createTopic = function (userId) {
+                return this.utilService.getResolveDefer("1");
+            }
+
+            appService.prototype.connectTopic = function (userId, topicId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.closeTopic = function (userId, topicId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.deleteTopic = function (userId, topicId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.createInbox = function (userId) {
+                return this.utilService.getResolveDefer("1");
+            }
+
+            appService.prototype.connectInbox = function (userId, inboxId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.closeInbox = function (userId, inboxId) {
+                return this.utilService.getResolveDefer();
+            }
+
+            appService.prototype.deleteInbox = function (userId, inboxId) {
                 return this.utilService.getResolveDefer();
             }
 

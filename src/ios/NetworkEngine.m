@@ -232,4 +232,193 @@
     [self.engine stopDownload:@"api/public/projectFile" params:@{@"projectId":projectId}];
 }
 
+
+
+-(CommonNetworkOperation*) createChat:(NSString*)userId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/chat"
+                                                         params:@{@"userId":userId}
+                                                     httpMethod:@"POST"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) connectChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/connectChat"
+                                                         params:@{@"userId": userId, @"chatId":chatId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) pauseChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/pauseChat"
+                                                         params:@{@"userId": userId, @"chatId":chatId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) closeChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/closeChat"
+                                                         params:@{@"userId": userId, @"chatId":chatId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) deleteChat:(NSString*)userId chatId:(NSString*)chatId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/chat"
+                                                         params:@{@"userId": userId, @"chatId":chatId}
+                                                     httpMethod:@"DELETE"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) connectTopic:(NSString*)userId topicId:(NSString*)topicId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/connectTopic"
+                                                         params:@{@"userId": userId, @"topicId":topicId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) closeTopic:(NSString*)userId topicId:(NSString*)topicId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/closeTopic"
+                                                         params:@{@"userId": userId, @"topicId":topicId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) deleteTopic:(NSString*)userId topicId:(NSString*)topicId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/topic"
+                                                         params:@{@"userId": userId, @"topicId":topicId}
+                                                     httpMethod:@"DELETE"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) connectInbox:(NSString*)userId inboxId:(NSString*)inboxId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/connectInbox"
+                                                         params:@{@"userId": userId, @"inboxId":inboxId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) closeInbox:(NSString*)userId inboxId:(NSString*)inboxId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/closeInbox"
+                                                         params:@{@"userId": userId, @"inboxId":inboxId}
+                                                     httpMethod:@"PUT"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) deleteInbox:(NSString*)userId inboxId:(NSString*)inboxId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/inbox"
+                                                         params:@{@"userId": userId, @"inboxId":inboxId}
+                                                     httpMethod:@"DELETE"];
+    op.isCacheable = NO;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
 @end
