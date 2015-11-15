@@ -69,6 +69,7 @@ AppEventDeclare(getJoinItems);
 + (NSString*)projectContentPath:(NSString*)projectId;
 + (NSString*)projectInfoPath:(NSString*)projectId;
 + (NSString*)projectsModulesPath;
++ (NSString*)projectsHostPath;
 + (NSString*)embeddedPath;
 + (void)dispatchEvent:(NSString*)eventType eventObj:(NSDictionary*)eventObj;
 
