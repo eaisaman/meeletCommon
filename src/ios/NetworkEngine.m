@@ -80,7 +80,7 @@
     }
     
     NSString* chatSeverPortValue = [standardUserDefaults objectForKey:SETTINGS_BUNDLE_chatserverPort_IDENTIFIER];
-    if (!chatSeverHostValue) {
+    if (!chatSeverPortValue) {
         for (NSDictionary *prefItem in prefSpecifierArray)
         {
             NSString *keyValueStr = [prefItem objectForKey:@"Key"];
@@ -191,6 +191,23 @@
         errorBlock(errorOp, prevResponsePath, error);
     }];
     [self.engine enqueueOperation:op forceReload:NO];
+    
+    return op;
+}
+
+-(CommonNetworkOperation*) getJoinItems:(NSString*)userId codeBlock:(StringResponseBlock) codeBlock onError:(NKErrorBlock) errorBlock
+{
+    CommonNetworkOperation *op = [self.engine operationWithPath:@"api/public/joinItems"
+                                                         params:@{@"userId":userId}
+                                                     httpMethod:@"GET"];
+    op.isCacheable = YES;
+    [op addHeaders:@{@"Accept":@"text/plain;charset=utf-8"}];
+    [op addCompletionHandler:^(CommonNetworkOperation *operation) {
+        codeBlock([operation responseString]);
+    } errorHandler:^(CommonNetworkOperation *errorOp, NSString* prevResponsePath, NSError *error) {
+        errorBlock(errorOp, prevResponsePath, error);
+    }];
+    [self.engine enqueueOperation:op forceReload:YES];
     
     return op;
 }

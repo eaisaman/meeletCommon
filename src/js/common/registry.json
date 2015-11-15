@@ -76,7 +76,8 @@
         "name": "gotoPage",
         "description": "Jump to page.",
         "parameters": [
-          "pageNum"
+          "pageNum",
+          "isInvited"
         ],
         "communicationType": "callback"
       },
@@ -170,6 +171,14 @@
           "widgetId",
           "url",
           "playLoop"
+        ],
+        "communicationType": "callback"
+      },
+      {
+        "name": "openApplication",
+        "description": "Open other applition on device.",
+        "parameters": [
+          "appScheme"
         ],
         "communicationType": "callback"
       },
