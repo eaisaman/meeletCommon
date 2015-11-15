@@ -34,6 +34,7 @@
 -(void) stopPlaySound:(CDVInvokedUrlCommand*)command;
 -(void) isPlayingSound:(CDVInvokedUrlCommand*)command;
 -(void) saveAvatar:(CDVInvokedUrlCommand*)command;
+-(void) openApplication:(CDVInvokedUrlCommand*)command;
 
 -(void) createChat:(CDVInvokedUrlCommand*)command;
 -(void) connectChat:(CDVInvokedUrlCommand*)command;

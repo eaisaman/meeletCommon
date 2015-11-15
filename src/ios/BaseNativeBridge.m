@@ -384,6 +384,25 @@
     }
 }
 
+-(void) openApplication:(CDVInvokedUrlCommand *)command
+{
+    if (command.arguments && command.arguments.count == 1) {
+        NSString *appScheme = command.arguments[0];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *urlStr = [NSString stringWithFormat:@"%@://",appScheme];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+        });
+
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    } else {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Incorrect argument number."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+
+}
+
 -(void) createChat:(CDVInvokedUrlCommand*)command
 {
     if (command.arguments && command.arguments.count == 1) {
