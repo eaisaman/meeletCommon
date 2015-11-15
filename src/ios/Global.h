@@ -35,6 +35,8 @@ typedef NS_ENUM(NSUInteger, ProjectMode) {
 
 extern const char* ProjectModeName[];
 
+AppEventDeclare(login);
+AppEventDeclare(logout);
 AppEventDeclare(projectScan);
 AppEventDeclare(normalScan);
 AppEventDeclare(getProjectError);
