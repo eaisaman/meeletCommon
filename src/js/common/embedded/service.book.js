@@ -72,7 +72,7 @@ define(
 
             window.cordova && appModule.
                 config(["$provide", "$injector", function ($provide, $injector) {
-                    $provide.decorator("flowService", ["$delegate", function($delegate) {
+                    $provide.decorator("bookService", ["$delegate", function($delegate) {
                         _.extend($delegate.constructor.prototype, BookService.prototype);
                         return $delegate;
                     }]);

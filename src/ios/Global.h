@@ -35,8 +35,6 @@ typedef NS_ENUM(NSUInteger, ProjectMode) {
 
 extern const char* ProjectModeName[];
 
-AppEventDeclare(login);
-AppEventDeclare(logout);
 AppEventDeclare(projectScan);
 AppEventDeclare(normalScan);
 AppEventDeclare(getProjectError);
@@ -51,7 +49,6 @@ AppEventDeclare(downloadProjectModulesStart);
 AppEventDeclare(downloadProjectModulesDone);
 AppEventDeclare(downloadProjectModulesError);
 AppEventDeclare(downloadProjectModulesProgress);
-AppEventDeclare(getJoinItems);
 
 @protocol IEventDispatcher <NSObject>
 
@@ -69,6 +66,7 @@ AppEventDeclare(getJoinItems);
 + (NSString*)projectContentPath:(NSString*)projectId;
 + (NSString*)projectInfoPath:(NSString*)projectId;
 + (NSString*)projectsModulesPath;
++ (NSString*)projectsHostPath;
 + (NSString*)embeddedPath;
 + (void)dispatchEvent:(NSString*)eventType eventObj:(NSDictionary*)eventObj;
 
