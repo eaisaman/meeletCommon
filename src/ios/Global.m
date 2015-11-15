@@ -112,13 +112,6 @@ static id<IEventDispatcher> eventDispatcher;
     dispatch_once(&onceToken, ^{
         [self restoreLoginUser];
         [[self engine] initEngine];
-        
-        //Copy initial version of modules to tmp folder for later extraction
-        NSFileManager *manager = [NSFileManager defaultManager];
-        NSString *modulesPath = [[NSBundle mainBundle] pathForResource:@"modules" ofType:@"zip"];
-        if ([manager fileExistsAtPath:modulesPath]) {
-            [manager copyItemAtPath:modulesPath toPath:[[self tmpPath] stringByAppendingPathComponent:@"modules.zip"] error:nil];
-        }
 
 #warning Launch HTTP server to browse application files for debug. Should disable this feature in the phase of release.
         NSError *error;
