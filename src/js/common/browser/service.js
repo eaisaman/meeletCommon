@@ -1797,6 +1797,28 @@ define(
                 return self.utilService.chain(arr);
             };
 
+            appService.prototype.getSameGroupUsers = function (userId) {
+                var self =  this;
+
+                return self.$http({
+                    method: 'POST',
+                    url: (window.serverUrl || "") + '/api/public/sameGroupUsers',
+                    params: {
+                        userId: userId
+                    }
+                }).then(function (result) {
+                    if (result.data.result === "OK") {
+                        var arr = result.data.resultValue;
+
+                        return self.utilService.getResolveDefer(arr);
+                    } else {
+                        return self.utilService.getRejectDefer(result.data.reason);
+                    }
+                }, function (err) {
+                    return self.utilService.getRejectDefer(err);
+                });
+            }
+
             appService.prototype.getServerUrl = function () {
                 //For Debug Use, Don't commit!!!
                 return this.utilService.getResolveDefer({data:{result:"OK", resultValue:"http://127.0.0.1:3000"}});

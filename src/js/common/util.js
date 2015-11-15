@@ -2180,6 +2180,7 @@ define(
             try {
                 var fn = window.globalEdges && window.globalEdges[edgeClass].unload;
                 fn && fn();
+                delete window.globalEdges[edgeClass];
             } catch (e) {
                 self.$exceptionHandler(e);
             }
