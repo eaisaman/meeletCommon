@@ -1801,7 +1801,7 @@ define(
                 var self =  this;
 
                 return self.$http({
-                    method: 'POST',
+                    method: 'GET',
                     url: (window.serverUrl || "") + '/api/public/sameGroupUsers',
                     params: {
                         userId: userId
