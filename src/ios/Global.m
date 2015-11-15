@@ -38,6 +38,7 @@ AppEventDefine(downloadProjectModulesStart);
 AppEventDefine(downloadProjectModulesDone);
 AppEventDefine(downloadProjectModulesError);
 AppEventDefine(downloadProjectModulesProgress);
+AppEventDefine(getJoinItems);
 
 #define AVATAR_PATH @"avatar"
 #define RESOURCE_PATH @"resource"

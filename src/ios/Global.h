@@ -51,6 +51,7 @@ AppEventDeclare(downloadProjectModulesStart);
 AppEventDeclare(downloadProjectModulesDone);
 AppEventDeclare(downloadProjectModulesError);
 AppEventDeclare(downloadProjectModulesProgress);
+AppEventDeclare(getJoinItems);
 
 @protocol IEventDispatcher <NSObject>
 
