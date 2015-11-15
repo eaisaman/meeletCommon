@@ -1113,6 +1113,24 @@ define(
                 });
 
                 if (locationIndex < self.pageMeta.locations.length - 1) {
+                    //Some pages' display is controlled by the creator. Only when he send the topic invitation, can the 
+                    //audience see the page.
+                    if (window.pomeloContext && self.$rootScope.loginUser && window.pomeloContext.userId !== self.$rootScope.loginUser._id) {
+                        if (self.pageMeta.displayControlLocations && self.pageMeta.displayControlLocations.length) {
+                            var i = locationIndex + 1;
+                            for(;i < self.pageMeta.locations.length;i++) {
+                                if (_.indexOf(self.pageMeta.displayControlLocations, self.pageMeta.locations[i]) < 0) {
+                                    break;
+                                }
+                            }
+                            if (i < self.pageMeta.locations.length) {
+                                locationIndex = i - 1;
+                            } else {
+                                return self.utilService.getResolveDefer(location);
+                            }                            
+                        }
+                    }
+
                     return self.loadPage(self.pageMeta.locations[locationIndex + 1]).then(
                         function () {
                             var $current = findPageElement(location),
@@ -1190,6 +1208,24 @@ define(
                 });
 
                 if (locationIndex > 0) {
+                    //Some pages' display is controlled by the creator. Only when he send the topic invitation, can the 
+                    //audience see the page.
+                    if (window.pomeloContext && self.$rootScope.loginUser && window.pomeloContext.userId !== self.$rootScope.loginUser._id) {
+                        if (self.pageMeta.displayControlLocations && self.pageMeta.displayControlLocations.length) {
+                            var i = locationIndex - 1;
+                            for(;i >= 0;i--) {
+                                if (_.indexOf(self.pageMeta.displayControlLocations, self.pageMeta.locations[i]) < 0) {
+                                    break;
+                                }
+                            }
+                            if (i >= 0) {
+                                locationIndex = i + 1;
+                            } else {
+                                return self.utilService.getResolveDefer(location);
+                            }                            
+                        }
+                    }
+
                     return self.loadPage(self.pageMeta.locations[locationIndex - 1]).then(
                         function () {
                             var $current = findPageElement(location),
@@ -1252,7 +1288,7 @@ define(
                 return self.utilService.getResolveDefer(location);
             };
 
-            appService.prototype.gotoPage = function (pageNum) {
+            appService.prototype.gotoPage = function (pageNum, isInvited) {
                 var self = this,
                     locationIndex,
                     $container = $("#main"),
@@ -1282,6 +1318,18 @@ define(
 
                 if (pageNum < self.pageMeta.locations.length && locationIndex !== pageNum) {
                     var gotoLocation = self.pageMeta.locations[pageNum];
+
+                    //Some pages' display is controlled by the creator. Only when he send the topic invitation, can the 
+                    //audience see the page.
+                    if (window.pomeloContext && self.$rootScope.loginUser && window.pomeloContext.userId !== self.$rootScope.loginUser._id) {
+                        if (self.pageMeta.displayControlLocations && self.pageMeta.displayControlLocations.length) {
+                            if (_.indexOf(self.pageMeta.displayControlLocations, gotoLocation) >= 0) {
+                                if (isInvited != null && !isInvited) {
+                                    return self.utilService.getResolveDefer(gotoLocation);
+                                }
+                            }
+                        }
+                    }
 
                     var widgetId = parseWidgetId(gotoLocation),
                         currentWidgetId = parseWidgetId(currentLocation);
