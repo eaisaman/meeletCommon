@@ -1912,6 +1912,11 @@ define(
 
                         return self.getResolveDefer();
                     }
+                    else if (action.actionType === "IncludeVideo") {
+                        mark.markComplete();
+
+                        return self.getResolveDefer();
+                    }
                 }
             }
 
