@@ -995,7 +995,7 @@ define(
 
                 return self.$http({
                     method: 'get',
-                    url: '/api/private/user',
+                    url: (window.serverUrl || '') + '/api/private/user',
                     params: {
                         userFilter: JSON.stringify({loginName: loginName})
                     }
@@ -1083,7 +1083,7 @@ define(
             appService.prototype.getUserDetail = function (userFilter) {
                 return this.$http({
                     method: 'GET',
-                    url: '/api/private/userDetail',
+                    url: (window.serverUrl || '') + '/api/private/userDetail',
                     params: {userFilter: JSON.stringify(userFilter || {})}
                 });
 
@@ -1092,7 +1092,7 @@ define(
             appService.prototype.getProject = function (projectFilter) {
                 return this.$http({
                     method: 'GET',
-                    url: '/api/public/project',
+                    url: (window.serverUrl || '') + '/api/public/project',
                     params: {projectFilter: JSON.stringify(projectFilter || {})}
                 });
 
