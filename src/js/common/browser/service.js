@@ -990,6 +990,39 @@ define(
                 }
             }
 
+            appService.prototype.createUser = function (userObj) {
+                var self = this,
+                    password = userObj.plainPassword;
+
+                return self.$http({
+                    method: 'post',
+                    url: (window.serverUrl || '') + '/api/public/user',
+                    params: {
+                        userObj: JSON.stringify(userObj)
+                    }
+                }).then(function (result) {
+                    if (result.data.result === "OK") {
+                        var userObj = result.data.resultValue,
+                            encoded = self.utilService.encode(userObj.loginName + ':' + password);
+                        self.$http.defaults.headers.common.Authorization = 'Basic ' + encoded;
+
+                        localStorage.loginUser = JSON.stringify(userObj);
+                        self.$rootScope.loginUser = self.$rootScope.loginUser || {};
+                        for (var key in self.$rootScope.loginUser) {
+                            delete self.$rootScope.loginUser[key];
+                        }
+
+                        _.extend(self.$rootScope.loginUser, userObj);
+
+                        return self.utilService.getResolveDefer(userObj);
+                    } else {
+                        return self.utilService.getRejectDefer(result.data.reason);
+                    }
+                }, function (err) {
+                    return self.utilService.getRejectDefer(err);
+                });
+            }
+
             appService.prototype.refreshUser = function (loginName) {
                 var self = this;
 
@@ -1083,7 +1116,7 @@ define(
             appService.prototype.getUserDetail = function (userFilter) {
                 return this.$http({
                     method: 'GET',
-                    url: (window.serverUrl || '') + '/api/private/userDetail',
+                    url: (window.serverUrl || '') + '/api/private/userProjectDetail',
                     params: {userFilter: JSON.stringify(userFilter || {})}
                 });
 

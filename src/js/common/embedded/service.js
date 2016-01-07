@@ -73,6 +73,19 @@ define(
             };
 
             /* Services managed by registry are visible to designer, serving generated app. */
+            appService.prototype.createUser = function (userObj) {
+                var self = this;
+
+                return self.cordovaPromise("createUser").apply(self, [JSON.stringify(userObj)]).then(
+                    function () {
+                        return self.restoreUserFromStorage();
+                    },
+                    function (err) {
+                        return self.getRejectDefer(err);
+                    }
+                );
+            }
+
             appService.prototype.refreshUser = function (loginName) {
                 var self = this;
 
