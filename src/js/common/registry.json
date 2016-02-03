@@ -342,32 +342,5 @@
     "description": "Flow project app services",
     "serviceList": [
     ]
-  },
-  {
-    "feature": "BookService",
-    "description": "Book project app services",
-    "serviceList": [
-      {
-        "name": "takeAvatarPhoto",
-        "description": "Take photo for avatar use.",
-        "parameters": [
-        ],
-        "communicationType": "event"
-      },
-      {
-        "name": "startWidgetRecord",
-        "description": "Start recording. Widget controls the process",
-        "parameters": [
-        ],
-        "communicationType": "event"
-      },
-      {
-        "name": "stopWidgetRecord",
-        "description": "Stop recording. Widget controls the process",
-        "parameters": [
-        ],
-        "communicationType": "event"
-      }
-    ]
   }
 ]
